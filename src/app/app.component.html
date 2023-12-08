@@ -55,6 +55,7 @@
     </div>
 
     <hr>
-    <smart-grid [dataSource]="dataSource" [columns]="columns" [layout]="layout" #grid id="grid"></smart-grid>
+    <!-- <smart-grid [dataSource]="dataSource" [columns]="columns" [layout]="layout" #grid id="grid"></smart-grid> -->
+    <smart-grid #grid id="grid" [dataSource]="dataSource" [columns]="columns" [editing]="editing" [appearance]="appearance"></smart-grid>
   </div>
 </div>

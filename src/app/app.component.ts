@@ -30,14 +30,26 @@ dataSource = new Smart.DataAdapter({
     ]
 })
 
-columns = [
-  { label: 'First Name', dataField: 'firstName', width: 150 },
-  { label: 'Last Name', dataField: 'lastName', width: 200 },
-  { label: 'Email', dataField: 'email', width: 150 },
-  { label: 'Phone', dataField: 'phone', width: 120 },
-  { label: 'Department', dataField: 'departmentName', width: 200 },
+  columns = [
+    { label: 'First Name', dataField: 'firstName', width: 150 },
+    { label: 'Last Name', dataField: 'lastName', width: 200 },
+    { label: 'Email', dataField: 'email', width: 150 },
+    { label: 'Phone', dataField: 'phone', width: 120 },
+    { label: 'Department', dataField: 'departmentName', width: 200, allowEdit: false }  
+  ]
+
+  appearance = {
+    showRowHeaderNumber: true
+  }
+
+  editing = {
+    enabled: true,
+    action: 'click',
+    mode: 'row'
+  }
+
   
-]
+
   // rowData: [
   //   { mission: "Voyager", company: "NASA", location: "Cape Canaveral", date: "1977-09-05", rocket: "Titan-Centaur ", price: 86580000, successful: true },
   //   { mission: "Apollo 13", company: "NASA", location: "Kennedy Space Center", date: "1970-04-11", rocket: "Saturn V", price: 3750000, successful: false },
@@ -77,6 +89,24 @@ init(): void {
     this.rowData = rowData2;
 
 }
+
+// Get the row here.
+// grid.addEventListener('beginEdit', (event) => {  
+  
+//   const detail = event.detail;
+//   const id = detail.id;
+//   const dataField = detail.dataField;
+//   const row = detail.row;
+//   const column = detail.column;
+//   const cell = detail.cell;
+//   const data = detail.data;
+//   const value = detail.value;
+
+//   if(id % 2 === 0) {
+//     grid.cancelEdit()
+//   }
+
+// })
 
 }
 

@@ -1,4 +1,4 @@
-export interface EmployeeModel {
+export interface IEmployeeModel {
 
     id: number;
     firstName: string;

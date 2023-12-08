@@ -27,7 +27,7 @@ export class AppComponent  implements AfterViewInit, OnInit {
   }
 
   dataSource = new Smart.DataAdapter({
-      dataSource: this.getEmployees1(),
+      dataSource: this.rowData, //this.getEmployees1(),
       dataFields: [
           'id: number',
           'firstName: string',
@@ -65,6 +65,8 @@ export class AppComponent  implements AfterViewInit, OnInit {
     this.rowData = rowData2;
     return this.rowData;
   }
+
+  
 
 
   ngOnInit(): void {
@@ -116,6 +118,7 @@ getEmployees() {
     .subscribe(
       (response) => { 
         this.rowData = response;
+        this.dataSource = this.rowData
         /*
 id: 1        
 firstName: "Bill"

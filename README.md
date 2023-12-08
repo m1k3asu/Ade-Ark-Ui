@@ -1,6 +1,12 @@
 # UserInterface
-
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.1.
+
+
+# If you do not have anglar installed, please install the latest verion with the cli (Must have node.js installed) 
+-- navigate into theAde-Ark-Ui directory with a command tool. 
+-- run npm install to get the node_modules
+-- to run this web app, use the command ng serve then open a browser at this location: http://localhost:4200/
+-- Make sure to run the Dot Net Web API solution.
 
 ## Development server
 

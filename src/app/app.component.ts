@@ -94,7 +94,7 @@ export class AppComponent  implements OnInit {
   }
 
   updateEmployee() {
-    let gridData: IEmployeeModel[] = [];
+    let gridEmployees: IEmployeeModel[] = [];
     const grid = <Grid>document.getElementById('grid');
     
     let gridRows = grid.rows?.length;
@@ -118,10 +118,21 @@ export class AppComponent  implements OnInit {
           departmentId: 0
         }
 
-        gridData.push(employee);
-        //UpdateEmployees
-      
+        gridEmployees.push(employee);              
       }
+
+      this.dataService.updateEmployees(gridEmployees).subscribe(
+        (response) => { 
+          if(response) {
+            alert("Successfully saved any grid changes. ");
+          }
+        },
+        (err: any) => {
+          console.log(err)
+          let a =5;
+        }
+      );
+      
     }
   }
 

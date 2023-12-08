@@ -1,6 +1,6 @@
 smart-grid {
     height: auto;
-    width: 100%;
+    width: 80%;
 }
 .template-button {
     background: transparent;
@@ -16,8 +16,8 @@ smart-grid {
 .template-button:active {
     color: var(--smart-primary);
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 700px) {
 	smart-grid {
-		width: 100%;
+		width: 80%;
 	}
 }

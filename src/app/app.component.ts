@@ -1,7 +1,9 @@
 
 import { Component, ViewChild, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { GridComponent, GridColumn, DataAdapter, Smart } from 'smart-webcomponents-angular/grid';
-import { EmployeeModel } from './models/employee-model';
+import { IEmployeeModel } from './models/employee-model';
+import { DataService } from './service/data.service';
+import { IDepartmentModel } from './models/department-model';
 
 
 @Component({
@@ -11,24 +13,31 @@ import { EmployeeModel } from './models/employee-model';
 })
 export class AppComponent  implements AfterViewInit, OnInit {
   @ViewChild('grid', { read: GridComponent, static: false }) grid!: GridComponent;
-  rowData: EmployeeModel[] = [];
+
+  constructor(private dataService: DataService)  {}
+
+  rowData: IEmployeeModel[] = [];
+  //departmentList: DepartmentModel[] = [];
+  departmentList: string[] = [];
+  selectedDepartment = '';
+  
    
   layout = {
     rowHeight: 40
-}
+  }
 
-dataSource = new Smart.DataAdapter({
-    dataSource: this.getEmployees(),
-    dataFields: [
-        'id: number',
-        'firstName: string',
-        'lastName: string',
-        'email: string',
-        'phone: string',
-        'departmentId: number',
-        'departmentName: string'
-    ]
-})
+  dataSource = new Smart.DataAdapter({
+      dataSource: this.getEmployees1(),
+      dataFields: [
+          'id: number',
+          'firstName: string',
+          'lastName: string',
+          'email: string',
+          'phone: string',
+          'departmentId: number',
+          'departmentName: string'
+      ]
+  });
 
   columns = [
     { label: 'First Name', dataField: 'firstName', width: 150 },
@@ -47,17 +56,9 @@ dataSource = new Smart.DataAdapter({
     action: 'click',
     mode: 'row'
   }
-
   
-
-  // rowData: [
-  //   { mission: "Voyager", company: "NASA", location: "Cape Canaveral", date: "1977-09-05", rocket: "Titan-Centaur ", price: 86580000, successful: true },
-  //   { mission: "Apollo 13", company: "NASA", location: "Kennedy Space Center", date: "1970-04-11", rocket: "Saturn V", price: 3750000, successful: false },
-  //   { mission: "Falcon 9", company: "SpaceX", location: "Cape Canaveral", date: "2015-12-22", rocket: "Falcon 9", price: 9750000, successful: true }
-  // ];
-  
-  getEmployees() {
-    let rowData2: EmployeeModel[] = [];
+  getEmployees1() {
+    let rowData2: IEmployeeModel[] = [];
     rowData2.push({ id: 1, firstName: 'alpha', lastName: 'betty', email: 'test@test.com', phone: '203-433-5677', departmentId: 2, departmentName: 'Human Resources'});
     rowData2.push({ id: 2, firstName: 'alpha2', lastName: 'betty2', email: 'test@test.com2', phone: '203-433-5677-2', departmentId: 22, departmentName: 'Human Resources2'});
 
@@ -67,6 +68,8 @@ dataSource = new Smart.DataAdapter({
 
 
   ngOnInit(): void {
+    
+    this.getDepartments();
 
     //  let rowData2: EmployeeModel[] = [];
     //  rowData2.push({ id: 1, firstName: 'alpha', lastName: 'betty', email: 'test@test.com', phone: '203-433-5677', departmentId: 2, departmentName: 'Human Resources'});
@@ -78,17 +81,112 @@ dataSource = new Smart.DataAdapter({
   ngAfterViewInit(): void {
     // afterViewInit code.
     this.init();
-}
+  }
+
+  getDepartments() {
+    this.dataService.getDepartmentList()
+      .subscribe(
+        (response) => { 
+          this.extractValues(response, "name");
+  
+        },
+        (error) => {  
+          console.error('Request failed with error')
+        },
+        () => {
+          //console.error('Request completed');      
+        })
+  }
 
 init(): void {
-    // init code.
-    let rowData2: EmployeeModel[] = [];
-    rowData2.push({ id: 1, firstName: 'alpha', lastName: 'betty', email: 'test@test.com', phone: '203-433-5677', departmentId: 2, departmentName: 'Human Resources'});
-    rowData2.push({ id: 2, firstName: 'alpha2', lastName: 'betty2', email: 'test@test.com2', phone: '203-433-5677-2', departmentId: 22, departmentName: 'Human Resources2'});
+    // let rowData2: IEmployeeModel[] = [];
+    // rowData2.push({ id: 1, firstName: 'alpha', lastName: 'betty', email: 'test@test.com', phone: '203-433-5677', departmentId: 2, departmentName: 'Human Resources'});
+    // rowData2.push({ id: 2, firstName: 'alpha2', lastName: 'betty2', email: 'test@test.com2', phone: '203-433-5677-2', departmentId: 22, departmentName: 'Human Resources2'});
+    // this.rowData = rowData2;
 
-    this.rowData = rowData2;
+    //this.getDepartments();
+}
+
+selectDepartmentHandler(event: any) {
+  this.selectedDepartment =  event.target.value as string;
+}
+
+getEmployees() {
+  this.dataService.getEmployeeList()
+    .subscribe(
+      (response) => { 
+        this.rowData = response;
+        /*
+id: 1        
+firstName: "Bill"
+lastName: "Jones"
+email: "bill.jones@gmail.com"
+phone:"202-234-3445"
+departmentId: 1
+departmentName: "Accounting"
+
+
+rowData2.push({ id: 1, firstName: 'alpha', lastName: 'betty', email: 'test@test.com', phone: '203-433-5677', departmentId: 2, departmentName: 'Human Resources'});
+        */
+      },
+      (error) => {  
+        console.error('Request failed with error')
+      },
+      () => {
+        //console.error('Request completed');      
+      })
+}
+
+updateEmployee() {
+
 
 }
+
+addEmployee() {
+  let fName = (<HTMLInputElement>document.getElementById('firstName')).value;
+  let lName = (<HTMLInputElement>document.getElementById('lastName')).value;
+  let email = (<HTMLInputElement>document.getElementById('email')).value;
+  let phone = (<HTMLInputElement>document.getElementById('phone')).value;
+
+  const employee: IEmployeeModel = { firstName: fName, lastName: lName, email: email, phone: phone, departmentName: this.selectedDepartment, departmentId: 0, id: 0};
+    
+    this.dataService.addEmployee(employee)
+    .subscribe(
+      (response) => {                           
+        let a = response;
+        /*
+        departmentId: 7
+        email: "gina.jones@tabasco.com"
+        firstName: "Gina"
+        id: 6
+        lastName: "Jones"
+        phone: "530-346-4545"
+        */
+        alert("Success. Employee Added to end of grid list");
+        this.resetAddEmployeeFields();
+      },
+      (error) => {                              
+        console.error('error caught in component')       
+        alert("Error adding Employee");
+        //throw error;   //You can also throw the error to a global error handler
+      }
+    );  
+}
+
+private resetAddEmployeeFields() {
+  (<HTMLInputElement>document.getElementById('firstName')).value = "";
+  (<HTMLInputElement>document.getElementById('lastName')).value = "";
+  (<HTMLInputElement>document.getElementById('email')).value = "";
+  (<HTMLInputElement>document.getElementById('phone')).value = "";
+  (<HTMLInputElement>document.getElementById('masterDepartmentList')).value = "----";
+}
+
+private extractValues(arr: any, prop: string) {
+  let extractValues = arr.map((item: { [x: string]: any; }) => item[prop]);
+  Array.prototype.unshift.apply( extractValues, ["----"]);
+  this.departmentList = extractValues;
+} 
+
 
 // Get the row here.
 // grid.addEventListener('beginEdit', (event) => {  
@@ -107,6 +205,8 @@ init(): void {
 //   }
 
 // })
+
+
 
 }
 
